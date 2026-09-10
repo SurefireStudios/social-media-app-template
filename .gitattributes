@@ -1,0 +1,8 @@
+# Normalise line endings. Without this a Windows checkout can commit CRLF into
+# scripts/smoke-test.sh, and Linux then refuses to run it ("bad interpreter").
+* text=auto eol=lf
+
+*.sh    text eol=lf
+*.png   binary
+*.ico   binary
+*.gif   binary

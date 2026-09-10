@@ -1,0 +1,50 @@
+# Render blueprint — a one-click deployment of this template.
+#
+# One service does everything: `bun run build` produces dist/index.js, which
+# serves the API and the built client on a single port. That fits the free plan.
+#
+# Pair it with a free Neon Postgres database (neon.tech) rather than Render's
+# own — Render's free Postgres expires after 30 days, Neon's free tier does not.
+#
+# After the first deploy, open a shell and run `bun run db:push` to create the
+# tables, and `bun run db:seed` if you want the demo content.
+
+services:
+  - type: web
+    name: swipe-social
+    runtime: node
+    plan: free
+    # Free instances spin down after 15 minutes idle and take ~50s to wake.
+    # Fine for a demo, not for anything with real users.
+    #
+    # Render's node runtime already ships Bun, so there is nothing to install.
+    # Do not add `npm install -g bun`: it fails with ENOENT because the build
+    # user cannot write to /usr/lib/node_modules.
+    #
+    # No --frozen-lockfile: bun.lock here was written by Bun 1.2 and Render's
+    # Bun is newer, so pinning the lockfile format risks a failure that has
+    # nothing to do with the dependencies themselves.
+    buildCommand: bun install && bun run build
+    startCommand: bun run dist/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Paste a Neon connection string here in the Render dashboard.
+      - key: DATABASE_URL
+        sync: false
+
+      # Signs the session cookie. Render generates one for you; you never see
+      # or need it. Changing it signs everyone out, which is the correct
+      # response to a suspected leak.
+      - key: SESSION_SECRET
+        generateValue: true
+
+      # Optional. Only needed if you serve the front end from a different
+      # origin than the API — a separate static site, or a custom domain in
+      # front of it. A single service like this one does not need it, because
+      # the client is served by the same origin it calls.
+      # Comma-separated, e.g. https://swipe-social.onrender.com
+      - key: PUBLIC_ORIGIN
+        sync: false

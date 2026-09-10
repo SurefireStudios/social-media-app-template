@@ -1,0 +1,18 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+
+# Never commit real credentials. SESSION_SECRET and DATABASE_URL live here.
+.env
+.env.*
+!.env.example
+
+# runtime output
+server.log
+*.log
+
+# uploaded images land here at runtime
+dist/public/uploads

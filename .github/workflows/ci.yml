@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Typecheck and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run check
+
+      # drizzle.config.ts throws at import if DATABASE_URL is unset, and the
+      # server bundle pulls it in. This is a syntactically valid placeholder
+      # that is never connected to — the build does not touch a database.
+      - name: Build
+        run: bun run build
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/placeholder
+
+  smoke:
+    name: Access control
+    runs-on: ubuntu-latest
+
+    # Runs the real thing: a real Postgres, a real server, real HTTP requests.
+    # Authentication bugs are the kind that typecheck perfectly well, so this is
+    # the job that actually protects the template.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: swipe_social_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/swipe_social_ci
+      SESSION_SECRET: ci-only-secret-not-used-anywhere-real-0123456789
+      PORT: 5000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Create the schema
+        run: bun run db:migrate
+
+      - name: Seed
+        run: bun run db:seed
+
+      - name: Start the server
+        run: |
+          bun run server/index.ts > server.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf -o /dev/null http://127.0.0.1:5000/api/health; then
+              echo "up after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server never became healthy"
+          cat server.log
+          exit 1
+
+      - name: Smoke test
+        run: BASE_URL=http://127.0.0.1:5000 bun run test:smoke
+
+      - name: Server log
+        if: always()
+        run: tail -50 server.log || true
