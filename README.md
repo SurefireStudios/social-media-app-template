@@ -8,7 +8,7 @@ A Tinder-style swipe feed, sign-up and sign-in, profiles, following, comments,
 direct messages, notifications, a points leaderboard, an admin dashboard and an
 ad slot — all in one repository, with no third-party accounts to create.
 
-[![CI](https://github.com/SurefireStudios/swipe-social-template-hashr8r/actions/workflows/ci.yml/badge.svg)](https://github.com/SurefireStudios/swipe-social-template-hashr8r/actions/workflows/ci.yml)
+[![CI](https://github.com/SurefireStudios/social-media-app-template/actions/workflows/ci.yml/badge.svg)](https://github.com/SurefireStudios/social-media-app-template/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 <img src="docs/screenshots/feed.png" alt="The swipe feed" width="240" />
@@ -49,8 +49,8 @@ You need [Bun](https://bun.sh) 1.2 or newer and a PostgreSQL database. Any
 Postgres works — a local one, or a free [Neon](https://neon.tech) instance.
 
 ```bash
-git clone https://github.com/SurefireStudios/swipe-social-template-hashr8r.git
-cd swipe-social-template-hashr8r
+git clone https://github.com/SurefireStudios/social-media-app-template.git
+cd social-media-app-template
 bun install
 cp .env.example .env
 ```
