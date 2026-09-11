@@ -1,0 +1,165 @@
+<!doctype html>
+<!--
+  The repository's social preview card — the image shown when a link to this
+  repo is posted to X, Slack, Discord or Reddit.
+
+  Rendered to docs/social-preview.png at 1920x960 (2x GitHub's recommended
+  1280x640, and under its 1 MB cap):
+
+    chrome --headless=new --disable-gpu --hide-scrollbars            --force-device-scale-factor=1.5 --window-size=1280,640            --screenshot=docs/social-preview.png docs/social-preview.html
+
+  GitHub has no API for setting it, so upload the PNG by hand:
+  Settings -> General -> Social preview -> Edit -> Upload an image.
+
+  Renamed the project? Edit the text below, re-render, and re-upload.
+-->
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+
+  body {
+    /* The app's own palette: near-black ground, crimson accent. */
+    background: #0b0d12;
+    font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+    color: #f8fafc;
+    position: relative;
+  }
+
+  /* A wash of the accent from the right, so the art side is not flat black. */
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(700px 580px at 82% 48%, rgba(225,29,72,0.28), transparent 66%),
+      radial-gradient(520px 440px at 8% 2%, rgba(225,29,72,0.09), transparent 70%);
+  }
+
+  /* Faint vertical rules, echoing the app's card art. */
+  .grid {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 34px);
+    mask-image: linear-gradient(90deg, #000 0%, #000 50%, transparent 80%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 50%, transparent 80%);
+  }
+
+  .wrap {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 430px;
+    height: 100%;
+    /* Generous margins on all four sides: social cards get cropped at edges. */
+    padding: 62px 56px 62px 74px;
+  }
+
+  .left { display: flex; flex-direction: column; justify-content: center; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #fb7185; margin-bottom: 20px;
+  }
+  .eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #e11d48;
+    box-shadow: 0 0 0 4px rgba(225,29,72,0.18);
+  }
+
+  h1 {
+    font-size: 62px; line-height: 1.04; font-weight: 800;
+    letter-spacing: -0.030em; margin-bottom: 22px;
+  }
+  h1 .accent { color: #f43f5e; }
+
+  p.lede {
+    font-size: 21px; line-height: 1.48; color: #a9b4c4;
+    max-width: 590px; margin-bottom: 30px;
+  }
+  p.lede b { color: #e2e8f0; font-weight: 600; }
+
+  .stack { display: flex; flex-wrap: wrap; gap: 9px; max-width: 600px; }
+  .chip {
+    font-size: 14px; font-weight: 600; color: #cbd5e1;
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 999px; padding: 7px 14px;
+  }
+  .chip.key {
+    color: #fecdd3;
+    background: rgba(225,29,72,0.15);
+    border-color: rgba(225,29,72,0.42);
+  }
+
+  /* --- the art side -------------------------------------------------- */
+  /* The column is 430 x 516 (640 less the 62px top and bottom padding).
+     Both phones are sized and placed to sit fully inside it, rotation
+     included, so nothing is clipped by the card edge. */
+  .art { position: relative; }
+
+  .phone {
+    position: absolute;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #12151c;
+    border: 1px solid rgba(255,255,255,0.11);
+    box-shadow: 0 36px 72px rgba(0,0,0,0.62), 0 0 0 1px rgba(0,0,0,0.55);
+  }
+  .phone img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover; object-position: top center;
+  }
+
+  /* Back card, dimmed so the front one reads first. */
+  .phone.back {
+    /* 196x367 keeps the screenshot's own 470:880 aspect, so nothing crops. */
+    width: 196px; height: 367px;
+    top: 78px; left: 6px;
+    transform: rotate(-8deg);
+    opacity: 0.66;
+  }
+  .phone.back::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(200deg, rgba(11,13,18,0.22), rgba(11,13,18,0.72));
+  }
+
+  /* 252x472 matches the screenshot aspect; rotated 4.2deg it occupies about
+     409 x 489, which fits inside the 430 x 516 column. */
+  .phone.front {
+    width: 252px; height: 472px;
+    top: 18px; left: 140px;
+    transform: rotate(4.2deg);
+  }
+</style>
+
+<div class="glow"></div>
+<div class="grid"></div>
+
+<div class="wrap">
+  <div class="left">
+    <div class="eyebrow"><span class="dot"></span>Open source &middot; MIT</div>
+
+    <h1>Social&nbsp;media app <span class="accent">template</span></h1>
+
+    <p class="lede">
+      A Tinder-style swipe feed, profiles, direct messages, notifications,
+      a leaderboard and an admin dashboard &mdash; with
+      <b>session authentication built in</b>.
+    </p>
+
+    <div class="stack">
+      <span class="chip key">Bun</span>
+      <span class="chip key">PostgreSQL</span>
+      <span class="chip key">React</span>
+      <span class="chip">Express</span>
+      <span class="chip">Drizzle&nbsp;ORM</span>
+      <span class="chip">TypeScript</span>
+      <span class="chip">Tailwind</span>
+      <span class="chip">Vite</span>
+    </div>
+  </div>
+
+  <div class="art">
+    <div class="phone back"><img src="screenshots/leaderboard.png"></div>
+    <div class="phone front"><img src="screenshots/feed.png"></div>
+  </div>
+</div>
