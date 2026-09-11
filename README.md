@@ -2,11 +2,11 @@
 
 # Swipe Social
 
-**A complete, self-hosted social platform you can fork and make your own.**
+**An open-source social media app template you can fork and make your own.**
 
-Sign-up and sign-in, a swipeable feed, profiles, following, comments, direct
-messages, notifications, a points leaderboard, an admin dashboard and an ad
-slot — all in one repository, with no third-party accounts to create.
+A Tinder-style swipe feed, sign-up and sign-in, profiles, following, comments,
+direct messages, notifications, a points leaderboard, an admin dashboard and an
+ad slot — all in one repository, with no third-party accounts to create.
 
 [![CI](https://github.com/SurefireStudios/swipe-social-template-hashr8r/actions/workflows/ci.yml/badge.svg)](https://github.com/SurefireStudios/swipe-social-template-hashr8r/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -24,7 +24,7 @@ slot — all in one repository, with no third-party accounts to create.
 | | |
 | --- | --- |
 | **Accounts** | Email and password, hashed with argon2id. Server-side sessions in Postgres. |
-| **Feed** | Swipe right to rate, left to skip. Cards you have already seen drop out. |
+| **Feed** | Tinder-style swipe cards — right to rate, left to skip. Cards you have already seen drop out. |
 | **Profiles** | Bio, location, avatar and banner uploads, post grid, follower counts. |
 | **Social** | Follow, comment, report. A points leaderboard, global or people-you-follow. |
 | **Messages** | One-to-one direct messages with unread counts. |
